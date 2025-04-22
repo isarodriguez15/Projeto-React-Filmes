@@ -1,0 +1,23 @@
+.botao{
+    padding: 10px 100px;
+    border: none;
+    cursor: pointer;
+    background-color: #73061B;
+    color: white;
+    border-radius: 6px;
+    /* Negrito */
+    font-weight: bolder;
+}
+
+/* Responsividade */
+
+/* Me de algumas caracteristicas a partir de um tamanho de tela */
+
+@media screen and (max-width: 768px){
+    /* 0px -> 768px */
+    .banner{
+        /* desaparece o banner */
+        display: none;
+      
+    }
+}
