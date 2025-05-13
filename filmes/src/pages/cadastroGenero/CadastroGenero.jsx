@@ -1,66 +1,77 @@
 import Header from "../../components/header/Header";
-import Footer from "../../components/footer/Footer";    
+import Footer from "../../components/footer/Footer";
 import Cadastro from "../../components/cadastro/Cadastro";
 import Lista from "../../components/lista/Lista";
-import{use, useEffect, useState} from "react";
+import { use, useEffect, useState } from "react";
 import api from "../../services/Services"
 
+//import Swal from 'sweetalert2'
+import Swal from 'sweetalert2'
 
 const CadastroGenero = () => {
 
-     
+
+   //nome do genero
     const [genero, setGenero] = useState("");
 
-
-    function cadastrarGenero(){
-        //verificar se o input esta vindo vazio
-        if(genero === ""){
-            alert("O campo precisa estar preenchido")
-        }
-        //try => tentar(o esperado)
-        //catch => lanca a excecao
-        try{
-            //cadastrar um genero: post
-            api.post("genero", {nome: genero});
-            alert("obaaa, genero cadastrado")
-        }catch (error){
-            alert("deu ruimm!");
-            console.log(error);
-        }
+    function alerta(icone, mensagem){
+    
     }
-    //teste
-    //useEffect <funcao> <dependencia>
 
-    useEffect(() => {
-        console.log(genero);
-    }, [genero]);
+    async function cadastrarGenero(e){
+        e.preventDefault();
+        //Verificar se o input esta vindo vazio
+        //Comedia Romantica
+        if(genero.trim() === ""){
+            try{
+                //cadastrar um genero: post
+                await api.post("genero",{nome: genero});
+                alerta("Sucess macho", "Cadastro reaizado com sucesso!😁")
+                alert("");
+                setGenero()
+            }catch(error){
+                alerta("sucess", "Erro macho! Entre em contato com o suporte!😭")
+                console.log(error);
+            }     
+        }else{
+            
+        }
 
+        //try => tentar(o esperado)
+        //catch => pega a execao
+    }
 
-    return (
-        <>
-        <Header/>
-        <main>
-        <Cadastro tituloCadastro ="cadastro de Genero" 
-        visibilidade ="none"
-        placeholder="Genero"
-        //Atribuindo a funcao:
-        funcCadastro = {cadastrarGenero}
-        //Atribuindo o valor ao input:
-        valorInput = {genero}
-        //Atribuindo a funcao que atualiza meu genero:
-        setValorInput = {setGenero}
-        />
-        <Lista
-        tituloLista="Lista de Genero"
-        visibilidade="none"
-        />
+    //Teste validar o genero
+    //useEffect(<function>, <dependency>)
+    //useEffect(() => {
+        //console.log(genero);
+    //},[genero]);
 
+    //fim do teste
 
-        </main>
-        <Footer/>
-        </>
+    return(
+       <>
+            <Header/>
+            <main>
+                <Cadastro 
+                tituloCadastro="Cadastro de Gênero"
+                visibilidade="none"
+                campoPlaceholder="Gênero"
+                //Atribuindo a funcao:
+                funcCadastro={cadastrarGenero}
+                //Atribuindo o valor ao input:
+                valorInput={genero}
+                //Atribuindo a funcao que atualiza o meu genero:
+                setValorInput={setGenero}
+                />
+                <Lista
+                 nomeLista="Lista de Gênero"
+                 visi_lista="none"
+                 />
+            </main>
+            <Footer/>
+       </>
     )
 }
-
 
 export default CadastroGenero;
