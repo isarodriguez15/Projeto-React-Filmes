@@ -14,7 +14,7 @@ const Cadastro = (props) => {
 
                     <div className="campo-cad_nome">
                         <label htmlFor="nome">Nome</label>
-                        <input type="text" name="nome" placeholder={`Digite o nome do ${props.placeholder}`} 
+                        <input type="text" name="nome" placeholder={`Digite o nome do Gênero`} 
                         value={props.valorInput}
                         //ao mudar o input algo acontece
                         //e = element = elemento
