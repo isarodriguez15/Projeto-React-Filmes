@@ -2,7 +2,7 @@ import Header from "../../components/header/Header";
 import Footer from "../../components/footer/Footer";
 import Cadastro from "../../components/cadastro/Cadastro";
 import Lista from "../../components/lista/Lista";
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import api from "../../services/Services"
 
 //import Swal from 'sweetalert2'
@@ -14,7 +14,7 @@ const CadastroGenero = () => {
     //nome do genero
     const [genero, setGenero] = useState("");
     const [listaGenero, setListaGenero] = useState([]);
-    const [excluirGenero, setExcluir] = useState();
+
 
 
     function alertar(icone, mensagem) {
@@ -35,7 +35,7 @@ const CadastroGenero = () => {
         });
     }
 
-
+   
     async function listarGenero() {
         try {
             const resposta = await api.get("genero");
@@ -48,7 +48,7 @@ const CadastroGenero = () => {
         }
     }
     //função de excluir o gênero ;)
-    async function ExcluirGenero(generoId, idGenero) {
+    async function ExcluirGenero(generoId) {
         const swalWithBootstrapButtons = Swal.mixin({
             customClass: {
                 confirmButton: "btn btn-success",
@@ -64,20 +64,20 @@ const CadastroGenero = () => {
             confirmButtonText: "Sim!",
             cancelButtonText: "Não?",
             reverseButtons: true
-        }).then(async(result) => {
+        }).then(async (result) => {
             if (result.isConfirmed) {
-                 try {
-            // interpolacao * concatenacao 
-            await api.delete(`genero/${generoId.idGenero}`);
-            //((`genero/${idGenero})  Isso é template string, ou seja, permite inserir variáveis dentro da string.
-            //console.log(resposta.data);
-           // alertar("success", "Genero deletado com sucesso!")
-            listarGenero();
+                try {
+                    // interpolacao * concatenacao 
+                    await api.delete(`genero/${generoId.idGenero}`);
+                    //((`genero/${idGenero})  Isso é template string, ou seja, permite inserir variáveis dentro da string.
+                    //console.log(resposta.data);
+                    // alertar("success", "Genero deletado com sucesso!")
+                    listarGenero();
 
-        } catch (error) {
-            console.log(error);
-            alertar("error", "Erro ao deletar o genero. Entre em contato com o suporte")
-        }
+                } catch (error) {
+                    console.log(error);
+                    alertar("error", "Erro ao deletar o genero. Entre em contato com o suporte")
+                }
                 swalWithBootstrapButtons.fire({
                     title: "Deletado!",
                     text: "O gênero foi deletado.",
@@ -97,6 +97,36 @@ const CadastroGenero = () => {
 
     }
     //função da paginação de gênero
+
+
+    //funcao atualizacao
+    async function editarGenero(genero) {
+       // console.log(genero);
+        const { value: novoGenero } = await Swal.fire({
+            title: "Modifique seu gênero",
+            input: "text",
+            inputLabel: "Novo gênero",
+            inputValue: genero.nome,
+            showCancelButton: true,
+            inputValidator: (value) => {
+                if (!value) {
+                    return "O campo não pode estar vazio!";
+                }
+            }
+        });
+        if (novoGenero) {
+            try {
+                api.put(`genero/${genero.idGenero}`,
+                 {nome:novoGenero});
+                Swal.fire(`O gênero modificado ${novoGenero}`);
+            } catch (error) {
+                    console.log(error);
+            }
+        }
+
+    }
+
+
 
 
 
@@ -159,10 +189,11 @@ const CadastroGenero = () => {
                     nomeLista="Lista de Gênero"
                     visi_lista="none"
                     //atribuir para lista, o meu estado atual:
-                    lista={listaGenero}
+                  //  lista={listaGenero}
                     tituloLista="Cadastrados"
                     nomeGenero="none"
                     onDelete={ExcluirGenero}
+                    funcEditar={editarGenero}
                 />
             </main>
             <Footer />

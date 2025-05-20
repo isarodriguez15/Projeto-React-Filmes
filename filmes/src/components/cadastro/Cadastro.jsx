@@ -15,7 +15,7 @@ const Cadastro = (props) => {
                     <div className="campo-cad_nome">
                         <label htmlFor="nome">Nome</label>
                         <input type="text" name="nome" placeholder={`Digite o nome do Gênero`} 
-                        value={props.valorInput}
+                        value={props.valorSelect}
                         //ao mudar o input algo acontece
                         //e = element = elemento
                         
@@ -28,9 +28,11 @@ const Cadastro = (props) => {
                         <label htmlFor="genero">Genero</label>
                         <select name="genero" id="">
                             <option value="" disabled selected>Selecione</option>
-                            <option value="">op 1</option>
-                            <option value="">op 2</option>
-                            <option value="">op 3</option>
+                            {props.lista && props.lista.length > 0 && props.lista.map((itemGenero) =>  
+                            
+                            <option value="">{itemGenero.idGenero} {itemGenero.nome}</option>
+                            )}
+                           
                         </select>
                     </div>
                     <Botao nomeDoBotao="Cadastrar"/>
