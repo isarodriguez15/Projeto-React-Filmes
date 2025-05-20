@@ -17,7 +17,7 @@ const CadastroGenero = () => {
     const [excluirGenero, setExcluir] = useState();
 
 
-    function alerta(icone, mensagem) {
+    function alertar(icone, mensagem) {
         const Toast = Swal.mixin({
             toast: true,
             position: "top-end",
@@ -48,28 +48,62 @@ const CadastroGenero = () => {
         }
     }
     //função de excluir o gênero ;)
-    async function ExcluirGenero( generoId, idGenero) {
-        try {
-
+    async function ExcluirGenero(generoId, idGenero) {
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+                confirmButton: "btn btn-success",
+                cancelButton: "btn btn-danger"
+            },
+            buttonsStyling: true
+        });
+        swalWithBootstrapButtons.fire({
+            title: "Você tem certeza que deseja excluir?",
+            text: "Não será possivél reverter!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Sim!",
+            cancelButtonText: "Não?",
+            reverseButtons: true
+        }).then(async(result) => {
+            if (result.isConfirmed) {
+                 try {
+            // interpolacao * concatenacao 
             await api.delete(`genero/${generoId.idGenero}`);
             //((`genero/${idGenero})  Isso é template string, ou seja, permite inserir variáveis dentro da string.
             //console.log(resposta.data);
-            alerta("sucess", "Genero deletado com sucesso!")
+           // alertar("success", "Genero deletado com sucesso!")
             listarGenero();
 
         } catch (error) {
             console.log(error);
-            alerta("error", "Erro ao deletar o genero. Entre em contato com o suporte")
+            alertar("error", "Erro ao deletar o genero. Entre em contato com o suporte")
         }
+                swalWithBootstrapButtons.fire({
+                    title: "Deletado!",
+                    text: "O gênero foi deletado.",
+                    icon: "success"
+                });
+            } else if (
+                /* Read more about handling dismissals below */
+                result.dismiss === Swal.DismissReason.cancel
+            ) {
+                swalWithBootstrapButtons.fire({
+                    title: "Cancelado",
+                    text: "Seu gênero não foi excluído :)",
+                    icon: "error"
+                });
+            }
+        });
+
     }
-       //função da paginação de gênero
+    //função da paginação de gênero
 
 
 
     //Assim que a página renderizar, o método listarGenero() será chamado
     useEffect(() => {
         listarGenero();
-        
+
     }, [listaGenero]);
 
     async function cadastrarGenero(evt) {
@@ -80,15 +114,17 @@ const CadastroGenero = () => {
             try {
                 //cadastrar um genero: post
                 await api.post("genero", { nome: genero });
-                alerta("Sucess macho", "Cadastro reaizado com sucesso!😁")
+                alertar("Sucess macho", "Cadastro reaizado com sucesso!😁")
                 // alert("");
                 setGenero("")
+                //atualiza minha lista assim que cadastrar um novo genero
+                listarGenero();
             } catch (error) {
-                alerta("sucess", "Erro macho! Entre em contato com o suporte!😭")
+                alertar("sucess", "Erro macho! Entre em contato com o suporte!😭")
                 console.log(error);
             }
         } else {
-            alerta("error", "Preencha o campo!")
+            alertar("error", "Preencha o campo!")
         }
     }
 
